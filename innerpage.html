@@ -1,0 +1,86 @@
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<title>::: Inner Page - TamilNewsApp :::</title>
+	
+	<link href="/thiraithuli/css/css.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/thiraithuli/assets/fd1ac141/jquery.js"></script>
+
+<style type="text/css">
+body 
+{
+	background-color: #000;
+}
+</style>
+
+<script>
+
+var news_id=document.location.hash;
+news_id=news_id.replace("#","");
+
+var lists="";
+    $.ajax({
+        success: function(response)
+        {
+				
+			var image1= document.createElement('img');
+			image1.setAttribute('src', "/thiraithuli/uploads/"+response.status[0].imagePath);
+			image1.setAttribute('style', 'padding:1em; max-width:70%; height:auto;');
+			
+			var news4 = document.createElement('div');
+			news4.setAttribute('class', 'sub_text');
+			var txt2 = document.createTextNode(response.status[0].photoDescription);
+			news4.appendChild(txt2);
+			
+			var news3 = document.createElement('center');
+			news3.appendChild(image1);
+			
+			var txt1 = document.createTextNode(response.status[0].title);
+			
+			var news1 = document.createElement('div');
+			news1.setAttribute('class', 'tamil_news');
+			news1.setAttribute('style', 'padding-top:1em;');
+			
+			news1.appendChild(txt1);
+			
+			var lists = document.createElement('span');
+			lists.setAttribute('id', response.status[0].id);
+			lists.appendChild(news1);
+			lists.appendChild(news3);
+			lists.appendChild(news4);
+			
+			document.getElementById('cinema').appendChild(lists);
+		
+        },
+        type: 'get',
+        url: '/thiraithuli/index.php?r=site/skillfieldspecific',
+        data: {
+			news_id:news_id		
+        },
+        cache: false,
+        dataType: 'json',
+    });
+
+</script>
+
+</head>
+
+<body>
+
+	<div class="top"></div>
+	
+	<div class="thirai">
+			<center><img src="images/logo.png" /></center>
+	</div>
+	
+	<div style="background:url(../images/top_bg.jpg);"></div>
+		
+	<div class="black_bg" style="width:100%;">
+		<div id="cinema"></div>	
+	</div>
+			
+	<div class="bottom"></div>
+
+</body>
+
+</html>
