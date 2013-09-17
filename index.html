@@ -1,0 +1,145 @@
+<html>
+<head>
+	<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+	<title>::: TamilNewsApp :::</title>
+	
+	<link href="/thiraithuli/css/css.css" rel="stylesheet" type="text/css" />
+	<script type="text/javascript" src="/thiraithuli/assets/fd1ac141/jquery.js"></script>
+
+<style type="text/css">
+body
+{
+	background-color: #000;
+}
+</style>
+</head>
+
+<body>
+<input type="hidden" id="last_id" name="last_id" value="0">
+<input type="hidden" id="first" name="first" value="0">
+
+<div id="mainDiv">
+
+<div class="top"></div>
+
+<div class="thirai">
+	<center><img src="images/logo.png" /></center>
+</div>
+	
+<div style="background:url(/thiraithuli/images/top_bg.jpg);"></div>
+
+<div id="container" class="black_bg">
+
+	<div class="tamil_news" style="padding-top:1em;">
+     Tamil News
+
+	<div id="cine"></div>
+	<div id="cinema"></div>
+	
+	<div id="last_msg_loader" style="bottom:0;left:0;right:0;background-color:#000;color:#FFF;text-align:right;"></div>
+
+	</div>
+	
+</div>
+
+<div class="bottom"></div>
+
+</div>
+
+<script>
+
+function innerpage(id)
+{
+	window.location.href="/thiraithuli/innerpage.html#"+id;
+}
+
+pageLoaded=false
+function load_news()
+{
+	$('div#last_msg_loader').html('<img src="/thiraithuli/images/ajax-loader.gif" alt="Loading...">');
+	
+	/*var d = new Date(); 
+	console.error("before get"+d.getMinutes()+":"+d.getSeconds());*/
+	
+    $.ajax({
+	
+        success: function(response)
+        {
+			
+			for (var i = 0, len = response.status.length; i < len; i++)
+			{
+				
+				var img1= document.createElement('img');
+				img1.setAttribute('src', "/thiraithuli/uploads/"+response.status[i].imagePath);
+				img1.setAttribute('style', 'width:80px; height:70px;');
+				
+				var div4 = document.createElement('div');
+				div4.setAttribute('class', 'text');
+				var txt = document.createTextNode(response.status[i].title);
+				div4.appendChild(txt);
+								
+				var div3 = document.createElement('div');
+				div3.setAttribute('class', 'img');
+				div3.appendChild(img1);
+						
+				var div2 = document.createElement('div');
+				div2.setAttribute('class', 'parent');
+				div2.appendChild(div3);
+				div2.appendChild(div4);
+				
+				var div1 = document.createElement('div');
+				div1.setAttribute('class', 'hover_bg');
+				div1.appendChild(div2);
+				
+				var link = document.createElement('a');
+				link.setAttribute('onclick', "innerpage("+response.status[i].id+")");
+				link.setAttribute('class', 'decoration');
+				link.appendChild(div1);
+				
+				var div5 = document.createElement('div');
+				div5.setAttribute('class', 'border');
+				
+				document.getElementById('cine').appendChild(link);
+				document.getElementById('cine').appendChild(div5);
+				pageLoaded=true
+				
+			document.getElementById("last_id").value=response.status[i].id;
+        	}
+		
+        },
+        type: 'get',
+        url: '/thiraithuli/index.php?r=site/skillfieldall',
+        data: {
+			last_id: parseInt(document.getElementById("last_id").value),
+			first: parseInt(document.getElementById("first").value)
+        },
+        cache: false,
+        dataType: 'json',
+    });
+	
+	document.getElementById("first").value=parseInt(document.getElementById("first").value)+1;
+}
+
+
+$(window).scroll(function(){
+    var scrHeight=Number($(window).scrollTop())+Number(screen.availHeight);
+	//console.error(document.getElementById("mainDiv").scrollHeight+"="+Number($(window).scrollTop()) +"="+screen.availHeight)
+	
+	if(scrHeight>=document.getElementById("mainDiv").scrollHeight)
+	{
+		if(pageLoaded)
+		{
+			load_news();
+			pageLoaded=false;
+			}
+	}	
+});
+
+document.getElementById("first").value=0;
+document.getElementById("last_id").value=0;
+load_news();
+
+</script>
+
+</body>
+</html>
